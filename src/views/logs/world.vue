@@ -67,4 +67,8 @@ watch(() => globalStore.selectedDstCluster, (newValue) => {
 </script>
 
 <style scoped>
+/* >>> 是 vue2 的深度选择器，vue3 用 ::v-deep */
+::v-deep .el-tabs__header {
+  margin-top: -30px;
+}
 </style>
