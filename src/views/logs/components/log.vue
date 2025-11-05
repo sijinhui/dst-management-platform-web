@@ -50,7 +50,7 @@ import {useI18n} from "vue-i18n";
 import {useScreenStore} from "@/hooks/screen/index.ts";
 import useGlobalStore from "@/stores/modules/global.ts";
 import scCodeEditor from "@/components/scCodeEditor/index.vue";
-import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref, watch, nextTick} from "vue";
 import logsApi from "@/api/logs"
 
 const props = defineProps({
@@ -64,6 +64,16 @@ const globalStore = useGlobalStore();
 const isDark = computed(() => globalStore.isDark);
 const language = computed(() => globalStore.language);
 
+const editor = ref(null)
+
+// 滚动到底部的方法
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (editor.value && editor.value.scrollToBottom) {
+      editor.value.scrollToBottom()
+    }
+  })
+}
 
 onMounted(() => {
   if (props.historical) {
@@ -118,6 +128,7 @@ const handlePullLogs = () => {
   logsApi.logValue.get(logsForm.value).then(response => {
     if (response.data !== null) {
       logsValue.value = response.data.join("\n")
+      scrollToBottom() // 每次拉取日志后滚动到底部
     }
   })
 }
@@ -161,6 +172,7 @@ const getFileConnect = () => {
   }
   logsApi.historical.log.get(reqForm).then(response => {
     logsValue.value = response.data
+    scrollToBottom() // 历史日志加载后也滚动到底部
   }).finally(() => {
     historicalLogLoading.value = false
   })

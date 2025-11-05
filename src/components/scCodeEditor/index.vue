@@ -119,6 +119,29 @@ export default {
     },
     refresh() {
       this.coder.refresh()
+    },
+    // 新增：滚动到底部的方法
+    scrollToBottom() {
+      if (this.coder) {
+        const scrollInfo = this.coder.getScrollInfo()
+        this.coder.scrollTo(0, scrollInfo.height)
+
+        // 或者使用这个方法，滚动到最后一行
+        // const lastLine = this.coder.lastLine()
+        // this.coder.scrollIntoView({line: lastLine, ch: 0})
+      }
+    },
+    // 新增：滚动到顶部的方法（如果需要）
+    scrollToTop() {
+      if (this.coder) {
+        this.coder.scrollTo(0, 0)
+      }
+    },
+    // 新增：滚动到指定行
+    scrollToLine(lineNumber) {
+      if (this.coder) {
+        this.coder.scrollIntoView({ line: lineNumber, ch: 0 });
+      }
     }
   }
 }
